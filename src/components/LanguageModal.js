@@ -1,7 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useEffect, useState } from 'react'
 import { FlatList, Image, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { forwardRef, useState } from 'react'
 import { AppAssets } from '../assets/appAssets'
-import { navString } from '../constants/navStrings'
+import { storageKeys } from '../constants/storageKeys'
 
 const LanguageModal = ({ isModal, setIsmodal, onSelecteLanguage }) => {
 
@@ -13,18 +14,38 @@ const LanguageModal = ({ isModal, setIsmodal, onSelecteLanguage }) => {
 
     const [selectedLang, setSelectedLang] = useState(0);
 
+    // useEffect(() => {
+    //     getLanguSaved()
+    // }, [selectedLang])
+
+    // async function getLanguSaved() {
+    //     await AsyncStorage.getItem(storageKeys.languageKey, async (err, res) => {
+    //         if (res) {
+    //             console.log("get laguage for storage :");
+    //             res = JSON.parse(res)
+    //             console.log(res);
+    //             setSelectedLang(parseInt(res))
+    //         } else {
+    //             console.log("store new key for laguage storage");
+    //             await AsyncStorage.setItem(storageKeys.languageKey, selectedLang + '');
+    //             setSelectedLang(selectedLang)
+    //         }
+    //     })
+    // }
+
     const renderLanguages = ({ item, index }) => {
         return (
             <TouchableOpacity style={styles.modal_lang_container}
                 onPress={() => {
                     let temp_arr = language;
-                    temp_arr.map((ele, eleIndex) => {
+                    temp_arr.map(async (ele, eleIndex) => {
                         if (index == eleIndex) {
                             if (ele.selected == true) {
                                 ele.selected = false;
                             } else {
                                 ele.selected = true;
                                 setSelectedLang(eleIndex)
+                                await AsyncStorage.setItem(storageKeys.languageKey, selectedLang + '');
                             }
                         } else {
                             ele.selected = false;
@@ -71,20 +92,20 @@ const LanguageModal = ({ isModal, setIsmodal, onSelecteLanguage }) => {
                         contentContainerStyle={{ marginTop: 10, }}
                     />
                     <View style={styles.modal_lang_action_container}>
-                            <TouchableOpacity style={styles.modal_lang_action_cancle}
-                                onPress={() => setIsmodal(false)}
-                            >
-                                <Text style={{fontSize:16, color:"#000", fontWeight:"500"}}>Cancel</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.modal_lang_action_apply}
-                                onPress={() => {
-                                    setIsmodal(false);
-                                    console.log("selected language =>", selectedLang);
-                                    onSelecteLanguage(selectedLang)
-                                }}
-                            >
-                                <Text style={{fontSize:16, color:"#000", fontWeight:"700"}}>Apply</Text>
-                            </TouchableOpacity>
+                        <TouchableOpacity style={styles.modal_lang_action_cancle}
+                            onPress={() => setIsmodal(false)}
+                        >
+                            <Text style={{ fontSize: 16, color: "#000", fontWeight: "500" }}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modal_lang_action_apply}
+                            onPress={() => {
+                                setIsmodal(false);
+                                console.log("selected language =>", selectedLang);
+                                onSelecteLanguage(selectedLang)
+                            }}
+                        >
+                            <Text style={{ fontSize: 16, color: "#000", fontWeight: "700" }}>Apply</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -102,27 +123,27 @@ const styles = StyleSheet.create({
         textAlign: "center"
 
     },
-    modal_lang_action_apply:{
-        height:50,
-        width:"40%",
-        borderRadius:10,
-        backgroundColor:"orange",
-        justifyContent:"center",
-        alignItems:"center",
+    modal_lang_action_apply: {
+        height: 50,
+        width: "40%",
+        borderRadius: 10,
+        backgroundColor: "orange",
+        justifyContent: "center",
+        alignItems: "center",
     },
-    modal_lang_action_cancle:{
-        height:50,
-        width:"40%",
-        borderRadius:10,
-        borderWidth:0.5,
-        justifyContent:"center",
-        alignItems:"center",
+    modal_lang_action_cancle: {
+        height: 50,
+        width: "40%",
+        borderRadius: 10,
+        borderWidth: 0.5,
+        justifyContent: "center",
+        alignItems: "center",
     },
-    modal_lang_action_container:{
-        marginTop:20,
-        flexDirection:"row",
-        justifyContent:"space-evenly",
-        alignItems:"center",
+    modal_lang_action_container: {
+        marginTop: 20,
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        alignItems: "center",
     },
     modal_lang_container: {
         height: 50,

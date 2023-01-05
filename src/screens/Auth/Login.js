@@ -31,6 +31,9 @@ const Login = ({ navigation }) => {
                         console.log(uData);
                         if (username == uData.email && password == uData.password) {
                             await AsyncStorage.setItem(storageKeys.storeUserEmail, uData.email);
+                            await AsyncStorage.setItem(storageKeys.useruuid, uData.uid)
+                            await AsyncStorage.setItem(storageKeys.userName, uData.name)
+                            await AsyncStorage.setItem(storageKeys.userContact, uData.contact)
                             setTimeout(() => {
                                 navigation.pop(1);
                                 CustomToast("Welcome to User Dash..");

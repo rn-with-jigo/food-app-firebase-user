@@ -151,6 +151,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
 				D6E537ABDCE2A8CB9F190715 /* [CP-User] [RNFB] Core Configuration */,
+				C2F9C69C6584A107D4C46726 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -263,6 +264,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-efoodappuser/Pods-efoodappuser-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C2F9C69C6584A107D4C46726 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-efoodappuser/Pods-efoodappuser-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/razorpay-pod/Razorpay.framework/Razorpay",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Razorpay.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-efoodappuser/Pods-efoodappuser-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		D6E537ABDCE2A8CB9F190715 /* [CP-User] [RNFB] Core Configuration */ = {

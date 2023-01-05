@@ -1,8 +1,9 @@
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import LanguageModal from '../../components/LanguageModal'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { storageKeys } from '../../constants/storageKeys';
+import { useNavigation } from '@react-navigation/native';
 
 const PrfoileTab = () => {
 
@@ -10,9 +11,32 @@ const PrfoileTab = () => {
 
   const [selectedLang, setSelectedLang] = useState(0);
 
-  const saveLangeToStore = async () => {
-    await AsyncStorage.setItem(storageKeys.languageKey, selectedLang + '');
-  }
+  // useEffect(() => {
+  //   getLanguSaved()
+  // }, [])
+
+  // async function getLanguSaved() {
+  //   await AsyncStorage.getItem(storageKeys.languageKey, async (err,res) => {
+  //     if(res){
+  //       console.log("get laguage for storage :");
+  //       res = JSON.parse(res)
+  //       console.log(res);
+  //       setSelectedLang(parseInt(res))
+  //     } else {
+  //       console.log("store new key for laguage storage");
+  //       await AsyncStorage.setItem(storageKeys.languageKey, selectedLang + '');
+  //       setSelectedLang(selectedLang)
+  //     }
+  //   })
+  // }
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => null
+    })
+  }, [])
 
   return (
     <View style={styles.profile_container}>

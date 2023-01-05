@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { navString } from './constants/navStrings'
-import { HOMESCREEN, LOADDERSCREEN, LOGINSCREEN, REGISTRATIONSCREEN, SPLASHSCREEN } from './screens/screens'
+import { ADDRESSSCREEN, CARTSCREEN, CHECKOUTSCEEEN, HOMESCREEN, LOADDERSCREEN, LOGINSCREEN, NEWADDRESSSCREEN, ORDERSTATUSSCREEN, REGISTRATIONSCREEN, SPLASHSCREEN } from './screens/screens'
 
 const AppNavigation = () => {
     const AppNav = createNativeStackNavigator();
@@ -20,6 +20,24 @@ const AppNavigation = () => {
                 <AppNav.Screen component={HOMESCREEN} name={navString.Homescreen} options={{
                     headerBackVisible: false,
                     // headerBackButtonMenuEnabled: false,
+                }} />
+                <AppNav.Screen component={CARTSCREEN} name={navString.Cart} options={{
+                    title: "Cart"
+                }} />
+                <AppNav.Screen component={CHECKOUTSCEEEN} name={navString.Checkout} options={{
+                    title: "Checkout"
+                }} />
+                <AppNav.Screen component={ADDRESSSCREEN} name={navString.AddressScreen} options={{
+                    title: "Address"
+                }} />
+                <AppNav.Screen component={NEWADDRESSSCREEN} name={navString.NewAddressScreen} options={{
+                    title: "Add New Address",
+                    presentation: "modal",
+                }} />
+                <AppNav.Screen component={ORDERSTATUSSCREEN} name={navString.OrderStatusScreen} options={{
+                    headerBackVisible: false,
+                    headerShown: false,
+                    headerBackButtonMenuEnabled: false,
                 }} />
             </AppNav.Navigator>
         </NavigationContainer>

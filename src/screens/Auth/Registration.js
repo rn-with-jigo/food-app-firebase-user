@@ -5,6 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 import { DB_USER } from "@env"
 import { navString } from '../../constants/navStrings';
 import CustomToast from '../../components/CustomToast';
+import uuid from "react-native-uuid"
 
 const Registration = ({navigation}) => {
 
@@ -20,17 +21,31 @@ const Registration = ({navigation}) => {
            saveUserData();
         }
     }
+    const useruid = uuid.v4();
 
     const saveUserData = () => {
         navigation.push(navString.Loadder)
         firestore()
             .collection(DB_USER)
-            .add({
+            // now this id for createin by us.
+            .doc(useruid)
+            .set({
                 name: name,
                 email: username,
                 contact: phone,
-                password: password
+                password: password,
+                uid: useruid,
+                cart: [],
+                address: [],
+                selectedAddIndex: null, 
             })
+            // this for the use id from db of firebase
+            // .add({
+            //     name: name,
+            //     email: username,
+            //     contact: phone,
+            //     password: password
+            // })
             .then(() => {
                 console.log("user add!.");
                 navigation.pop(1)

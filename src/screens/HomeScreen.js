@@ -8,6 +8,10 @@ import SerachTab from './tabs/SerachTab';
 import WishesTab from './tabs/WishesTab';
 import OrderTab from './tabs/OrderTab';
 import PrfoileTab from './tabs/PrfoileTab';
+import firebase from '@react-native-firebase/firestore';
+import { DB_USER } from "@env"
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storageKeys } from '../constants/storageKeys';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -46,32 +50,31 @@ const HomeScreen = ({ navigation }) => {
                                 (<OrderTab />)
                                 : (<PrfoileTab />)
             }
-
             <View style={styles.home_bottom_container}>
                 <TouchableOpacity style={styles.home_tab_btn}
                     onPress={() => setSeletectedTab(0)}
                 >
-                    <Image source={AppAssets.HomeIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 0 ? "orange" : "#000" }]} />
+                    <Image source={AppAssets.HomeIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 0 ? "#3C6255" : "#000" }]} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.home_tab_btn}
                     onPress={() => setSeletectedTab(1)}
                 >
-                    <Image source={AppAssets.SerachIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 1 ? "orange" : "#000" }]} />
+                    <Image source={AppAssets.SerachIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 1 ? "#3C6255" : "#000" }]} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.home_tab_btn}
                     onPress={() => setSeletectedTab(2)}
                 >
-                    <Image source={AppAssets.WishIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 2 ? "orange" : "#000" }]} />
+                    <Image source={AppAssets.WishIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 2 ? "#3C6255" : "#000" }]} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.home_tab_btn}
                     onPress={() => setSeletectedTab(3)}
                 >
-                    <Image source={AppAssets.OrderIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 3 ? "orange" : "#000" }]} />
+                    <Image source={AppAssets.OrderIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 3 ? "#3C6255" : "#000" }]} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.home_tab_btn}
                     onPress={() => setSeletectedTab(4)}
                 >
-                    <Image source={AppAssets.ProfileIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 4 ? "orange" : "#000" }]} />
+                    <Image source={AppAssets.ProfileIcon} style={[styles.home_bottom_icon_style, { tintColor: seletectedTab == 4 ? "#3C6255" : "#000" }]} />
                 </TouchableOpacity>
             </View>
         </ScreenWrapper>
