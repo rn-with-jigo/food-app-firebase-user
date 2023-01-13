@@ -13,12 +13,42 @@ const OrderTab = () => {
 
   const [ordersLsit, setOrdersList] = useState([]);
 
+  const [userId, setUserId] = useState(null);
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => null
     })
-    getOrderList()
+    // getOrderList()
+    
+
   }, [])
+  useEffect(() => {
+    (async () => {
+      await AsyncStorage.getItem(storageKeys.useruuid, (err, res) => {
+        if(res){
+          setUserId(res)
+        }
+      })
+    })();
+  },[])
+
+  useEffect(() => {
+    console.log(userId);
+    if(userId){
+      let subscibe = firestore()
+      .collection(DB_ORDERS)
+      .where("userId", "==", userId)
+      .onSnapshot(data => {
+        console.log("data => item,|\n", data);
+        let temp_arry = [];
+        data.docs.map((el) => {
+          temp_arry.push(el._data)
+        })
+        setOrdersList(temp_arry)
+      })
+    }
+  }, [userId])
 
   async function getOrderList() {
       let userId = await AsyncStorage.getItem(storageKeys.useruuid)
@@ -51,9 +81,9 @@ const OrderTab = () => {
     return (
       <OrderListCard
         orderItemsList={item?.oitems || [{}]}
-        orderId={item?.oid.substring(1,8) || null}
+        orderId={item?.oid.substring(0,8) || null}
         orderPrice={item?.orderTotal || null}
-        status={item?.status === "success"? 'In Progress' : null}
+        status={item?.orderStatus || null}
         date={item?.odate || null}
       />
     )

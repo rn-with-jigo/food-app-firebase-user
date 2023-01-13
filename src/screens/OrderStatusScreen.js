@@ -10,7 +10,7 @@ import orderid from "react-native-uuid"
 const OrderStatusScreen = ({ navigation, route }) => {
 
     // console.log(status);
-    const { cartitems, status, username, useremail, usercontact, total, address, userid } = route?.params
+    const { cartitems, status, username, useremail, usercontact, total, address, userid, pay_type, pay_id } = route?.params
 
 
     useEffect(() => {
@@ -27,8 +27,10 @@ const OrderStatusScreen = ({ navigation, route }) => {
         // if(getUserdata.exists())
         let temp_orders = {}
         temp_orders.oid = orderid.v4();
-        temp_orders.oitems = cartitems;
         temp_orders.status = status;
+        temp_orders.orderStatus = "isPlaced";
+        temp_orders.orderPayType = pay_type;
+        temp_orders.orderPayId = pay_id;
         temp_orders.orderAddress = address;
         temp_orders.orderBy = username;
         temp_orders.orderEamil = useremail;
@@ -36,6 +38,7 @@ const OrderStatusScreen = ({ navigation, route }) => {
         temp_orders.userId = userid;
         temp_orders.orderTotal = total;
         temp_orders.odate = new Date().toLocaleString('en', { dateStyle: "medium", timeStyle: "short" });
+        temp_orders.oitems = cartitems;
 
 
         firestore()

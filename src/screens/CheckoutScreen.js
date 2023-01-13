@@ -10,13 +10,26 @@ import { useIsFocused } from '@react-navigation/native';
 import RazorpayCheckout from 'react-native-razorpay'
 import CustomToast from '../components/CustomToast'
 import uuid from "react-native-uuid"
+import RaduiosComponent from '../components/RaduiosComponent'
 
 const CheckoutScreen = ({ navigation, route }) => {
 
     const [checkout_cart_list, setCheckoutCartList] = useState([])
     const [checkout_user_add, setCheckoutUserAdd] = useState(null);
+    const [payment_type_index, setPaymentTypeIndex] = useState(null)
 
-    const isFocused = useIsFocused()
+    const isFocused = useIsFocused();
+
+    const payment_options = [
+        {
+            id: "#pay001",
+            option: "Online",
+        },
+        {
+            id: "#pay002",
+            option: "COD",
+        },
+    ]
 
     const { total_amount, uid } = route.params;
     useEffect(() => {
@@ -75,9 +88,33 @@ const CheckoutScreen = ({ navigation, route }) => {
         };
 
         RazorpayCheckout.open(option)
-            .then(data => {
+            .then(async data => {
                 console.log("data after complete razorpat \n", data);
-                alert(data.razorpay_payment_id);
+                // alert(data.razorpay_payment_id);
+                let user_name = await AsyncStorage.getItem(storageKeys.userName);
+                let user_contact = await AsyncStorage.getItem(storageKeys.userContact);
+                let user_email = await AsyncStorage.getItem(storageKeys.storeUserEmail);
+                navigation.push(navString.Loadder)
+                setTimeout(() => {
+                    navigation.pop(1);
+                    // CustomToast("Your payment is done: \n payment id:"+ uuid.v4());
+                    console.log(checkout_user_add.house_name + "," +
+                        checkout_user_add.house_number + "," + checkout_user_add.street + "," + checkout_user_add.address);
+                    navigation.push(navString.OrderStatusScreen, {
+                        status: "success",
+                        pay_type: payment_options[payment_type_index].option,
+                        pay_id: data.razorpay_payment_id,
+                        username: user_name,
+                        cartitems: checkout_cart_list,
+                        useremail: user_email,
+                        usercontact: user_contact,
+                        total: total_amount,
+                        address: checkout_user_add.house_name + "," +
+                            checkout_user_add.house_number + "," + checkout_user_add.street + "," + checkout_user_add.address,
+                        userid: uid,
+                    })
+                }, 5000);
+
             })
             .catch(err => {
                 console.log("error while doing payment :", err);
@@ -168,6 +205,20 @@ const CheckoutScreen = ({ navigation, route }) => {
                         }
                     </View>
                 </View>
+
+                <Text style={{
+                    fontWeight: "700",
+                    fontSize: 16,
+                    color: "#000",
+                    marginTop: 16,
+                    paddingHorizontal: 20,
+                }}>Payment Option:</Text>
+                <RaduiosComponent
+                    radioList={payment_options}
+                    selectedIndex={payment_type_index}
+                    setSelectedIndex={setPaymentTypeIndex}
+                />
+
             </View>
             {checkout_user_add ?
                 <TouchableOpacity style={styles.checkout_payment_btn_container}
@@ -176,24 +227,35 @@ const CheckoutScreen = ({ navigation, route }) => {
                         let user_contact = await AsyncStorage.getItem(storageKeys.userContact);
                         let user_email = await AsyncStorage.getItem(storageKeys.storeUserEmail);
                         console.log("user_name: ", user_name, "\nuser_contact: ", user_contact, "\nuser_email: ", user_email);
-                        navigation.push(navString.Loadder)
-                        setTimeout(() => {
-                            navigation.pop(1);
-                            // CustomToast("Your payment is done: \n payment id:"+ uuid.v4());
-                            console.log(checkout_user_add.house_name + "," +
-                            checkout_user_add.house_number + "," + checkout_user_add.street + ","+ checkout_user_add.address);
-                            navigation.push(navString.OrderStatusScreen, {
-                                status: "success",
-                                username: user_name,
-                                cartitems: checkout_cart_list,
-                                useremail: user_email,
-                                usercontact: user_contact,
-                                total: total_amount,
-                                address: checkout_user_add.house_name + "," +
-                                 checkout_user_add.house_number + "," + checkout_user_add.street + ","+ checkout_user_add.address,
-                                userid: uid,
-                            })
-                        }, 5000);
+                        if (payment_options[payment_type_index].option == "COD") {
+                            console.log("it's COD");
+                            navigation.push(navString.Loadder)
+                            setTimeout(() => {
+                                navigation.pop(1);
+                                // CustomToast("Your payment is done: \n payment id:"+ uuid.v4());
+                                console.log(checkout_user_add.house_name + "," +
+                                checkout_user_add.house_number + "," + checkout_user_add.street + ","+ checkout_user_add.address);
+                                navigation.push(navString.OrderStatusScreen, {
+                                    status: "success",
+                                    pay_type: payment_options[payment_type_index].option,
+                                    pay_id: uuid.v4().substring(0,9),
+                                    username: user_name,
+                                    cartitems: checkout_cart_list,
+                                    useremail: user_email,
+                                    usercontact: user_contact,
+                                    total: total_amount,
+                                    address: checkout_user_add.house_name + "," +
+                                     checkout_user_add.house_number + "," + checkout_user_add.street + ","+ checkout_user_add.address,
+                                    userid: uid,
+                                })
+                            }, 5000);
+                        } else if (payment_options[payment_type_index].option == "Online") {
+                            console.log("it's Online");
+                            doPayement();
+                        }
+
+
+
                     }}
                 >
                     <Text style={styles.checkout_payment_btn_text}>pay Now (Rs. {total_amount ? total_amount : "0"})</Text>

@@ -165,7 +165,7 @@ const HomeTab = () => {
         data={all_items}
         renderItem={renderItemAll}
         keyExtractor={item => item.id.toString()}
-        contentContainerStyle={{ padding: 15 }}
+        contentContainerStyle={{ padding: 15, paddingBottom:80, }}
         // ListEmptyComponent={renderEmptyComponent}
         ItemSeparatorComponent={() => {
           return (
