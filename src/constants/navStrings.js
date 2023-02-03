@@ -8,6 +8,8 @@ export const navString = {
     AddressScreen: "address",
     NewAddressScreen: "new-address",
 
+    ProductDetailsScreen: "product-detail",
+
     Login: "login",
     Registration: 'registor',
 

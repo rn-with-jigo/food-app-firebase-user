@@ -39,6 +39,12 @@ const OrderStatusScreen = ({ navigation, route }) => {
         temp_orders.orderTotal = total;
         temp_orders.odate = new Date().toLocaleString('en', { dateStyle: "medium", timeStyle: "short" });
         temp_orders.oitems = cartitems;
+        temp_orders.oactivity = [{
+            activityId: orderid.v4(),
+            activityAction: "Order is Placed",
+            activityDate: new Date().toLocaleString('en', { dateStyle: "medium", timeStyle: "short" }),
+            extra: "",
+        }]
 
 
         firestore()

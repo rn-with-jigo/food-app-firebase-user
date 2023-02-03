@@ -4,13 +4,18 @@ import firestore from '@react-native-firebase/firestore';
 import { DB_ITEMS, DB_USER } from "@env"
 import { AppAssets } from '../../assets/appAssets';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage, { useAsyncStorage } from '@react-native-async-storage/async-storage';
 import { storageKeys } from '../../constants/storageKeys';
 import { navString } from '../../constants/navStrings';
 
 const HomeTab = () => {
   const [all_items, setAllItems] = useState([])
   const [cart_count, setCart_count] = useState(0);
+  const [uFavoriteList, setUFavoritesList] = useState([]);
+  const [isFound, setIsFound] = useState(false);
+
+  const { getItem: getUserId } = useAsyncStorage(storageKeys.useruuid)
+  
 
   const isFocused = useIsFocused()
 
@@ -23,20 +28,22 @@ const HomeTab = () => {
         console.log('Total item: ', querySnapshot.size);
         let temp_arr = []
         querySnapshot.forEach(documentSnapshot => {
-          // console.log('items data: ', documentSnapshot.id, documentSnapshot.data());
+          console.log('items data: ', documentSnapshot.id, documentSnapshot.data());
           temp_arr.push({ id: documentSnapshot.id, data: documentSnapshot.data() })
         });
         setAllItems(temp_arr)
       });
-
   }, [])
+  
 
+  
   useEffect(() => {
     nav.setOptions({
       headerRight: () => <CartCounts />
     })
     getUserCartCount();
   }, [cart_count, isFocused])
+
 
   async function onAddToCart(item, index) {
 
@@ -93,6 +100,7 @@ const HomeTab = () => {
             if (userdata.exists) {
               // console.log(userdata.data());
               console.log("cart len =>", userdata.data().cart.length);
+              setUFavoritesList(userdata.data().favorite)
               return userdata._data.cart.length;
             }
           })
@@ -123,9 +131,55 @@ const HomeTab = () => {
     )
   }, [cart_count])
 
+  async function setItemFavoriteState(iID, st) {
+    
+    await AsyncStorage.getItem(storageKeys.useruuid, (err, res) => {
+      if (res) {
+        if (st) {
+          if (uFavoriteList.length > 0) {
+
+            let arr = [];
+            arr = uFavoriteList;
+            arr.splice(arr.findIndex(iTem => iTem == iID), 1)
+            setUFavoritesList(arr)
+          } else {
+            uFavoriteList.splice(uFavoriteList.findIndex(iTem => iTem == iID), 1)
+            setUFavoritesList(uFavoriteList)
+          }
+        } else {
+
+          if (uFavoriteList.length > 0) {
+
+            let arr = [];
+            arr = uFavoriteList;
+            arr.push(iID)
+            setUFavoritesList(arr)
+          } else {
+            uFavoriteList.push(iID)
+            setUFavoritesList(uFavoriteList)
+          }
+        }
+        firestore()
+          .collection(DB_USER)
+          .doc(res)
+          .update({
+            favorite: uFavoriteList,
+          })
+
+          setIsFound(st)
+      }
+
+    })
+  }
+
   const renderItemAll = ({ item, index }) => {
+
     return (
-      <View style={styles.home_item_single_container}>
+      <TouchableOpacity style={styles.home_item_single_container}
+        onPress={() => {
+          nav.navigate(navString.ProductDetailsScreen, { itemData: item })
+        }}
+      >
         <Image source={{ uri: item.data.imgeurl }} style={styles.home_item_image} />
 
         <View style={{ flex: 1, justifyContent: "space-between", flexDirection: "row" }}>
@@ -141,20 +195,34 @@ const HomeTab = () => {
           </View>
 
           <View style={styles.home_item_wishes_container}>
-            <TouchableOpacity>
-              <Image source={AppAssets.WishIcon} style={{ height: 25, width: 25, }} />
+
+            <TouchableOpacity style={{ padding: 5, }}
+              onPress={() => {
+                let find_item = uFavoriteList.find(iInd => iInd == item.id)
+                if(find_item != undefined){
+                  setItemFavoriteState(item.id, true);
+                } else {
+                  setItemFavoriteState(item.id, false);
+                }
+              }}
+            >
+              <Image source={
+                (uFavoriteList.find(iInd => iInd == item.id) != undefined)?
+                AppAssets.WishIconFill
+                :AppAssets.WishIcon} style={{ height: 25, width: 25, }} />
             </TouchableOpacity>
+
           </View>
         </View>
 
-        <TouchableOpacity style={styles.home_addtocart_btn}
+        {/* <TouchableOpacity style={styles.home_addtocart_btn}
           onPress={() => {
             onAddToCart(item, index);
           }}
         >
           <Text style={{ fontWeight: "600", color: "#fff" }}>Add to Cart</Text>
-        </TouchableOpacity>
-      </View>
+        </TouchableOpacity> */}
+      </TouchableOpacity>
     )
   }
 
@@ -165,7 +233,7 @@ const HomeTab = () => {
         data={all_items}
         renderItem={renderItemAll}
         keyExtractor={item => item.id.toString()}
-        contentContainerStyle={{ padding: 15, paddingBottom:80, }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 10, paddingBottom: 80, }}
         // ListEmptyComponent={renderEmptyComponent}
         ItemSeparatorComponent={() => {
           return (
@@ -242,7 +310,7 @@ const styles = StyleSheet.create({
     height: 110,
     flexDirection: "row",
     alignSelf: "center",
-    width: "90%",
+    width: "95%",
     elevation: 4,
     borderRadius: 10,
     backgroundColor: "#fff",

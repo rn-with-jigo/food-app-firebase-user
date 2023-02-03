@@ -9,7 +9,7 @@ import ScreenWrapper from '../components/ScreenWrapper';
 import { navString } from "../constants/navStrings";
 import { storageKeys } from '../constants/storageKeys';
 
-const CartScreen = ({navigation}) => {
+const CartScreen = ({ navigation }) => {
 
     const isFocused = useIsFocused();
     const [cart_list, setCartList] = useState([]);
@@ -168,7 +168,44 @@ const CartScreen = ({navigation}) => {
     const getToalofCart = () => {
         let total = 0;
         cart_list.map((ele, index) => {
-            total = total + ele.data.qty * ele.data.price
+            // console.log("item => ", ele);
+            let cus_arr = ele.customization;
+            let pr_price = parseInt(ele.data.price);
+            console.log(pr_price);
+            // return 
+            let pr_dicount = parseInt(ele.data.discountprice);
+// start the map
+            cus_arr.map((item) => {
+                let get_key = Object.keys(item)[0]
+                console.log("item => ", item[get_key]);
+                if (Array.isArray(item[get_key])) {
+                    console.log("item arr => ", item[get_key]);
+                    let final_filter_arr = item[get_key]
+                    final_filter_arr.map((e) => {
+                        if (e.action == "+") {
+                            pr_price += parseInt(e.price)
+                        } else if (e.action == "-") {
+                            pr_price -= parseInt(e.price)
+                        } 
+                    })
+                    // console.log("price => (pr_price)\n ", pr_price);
+
+                } else {
+                    pr_price += parseInt(item[get_key].price)
+                    // console.log("item obj => ", item[get_key], " price", pr_price);
+                                               
+                }
+            })
+
+
+            // console.log("cus_total => ",cus_arr);
+
+            // total = total + ele.data.qty * ele.data.price
+            // let custmization_total = ele.customization.reduce((pre, cur) => {
+            //     return pre += parseInt(cur.cusPrice)
+            // }, 0)
+            // total = total + custmization_total;
+            total = pr_price;
         })
         return total;
     }
@@ -196,7 +233,7 @@ const CartScreen = ({navigation}) => {
                         </View>
                         <TouchableOpacity style={styles.cart_checkout_btn_container}
                             onPress={() => {
-                                navigation.push(navString.Checkout, {cData: cart_list, total_amount: getToalofCart(), uid: useruid})
+                                navigation.push(navString.Checkout, { cData: cart_list, total_amount: getToalofCart(), uid: useruid })
                             }}
                         >
                             <Text style={{ fontSize: 16, fontWeight: "bold", color: "#fff" }}>Checkout</Text>

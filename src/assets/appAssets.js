@@ -11,9 +11,11 @@ export const AppAssets = {
     AddIcon: require("./add_sign.png"),
     MinusIcon: require("./minus.png"),
     RequiredIcon: require("./medical.png"),
+    DownIcon: require("./down.png"),
 
     // list gif
 
     FaildGif: require("./gif/faild.gif"),
     SuccessGif: require("./gif/success.gif"),
+    Food_1: require("./food_1.png"),
 }

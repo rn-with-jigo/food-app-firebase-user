@@ -14,6 +14,8 @@ const SplashScreen = ({navigation}) => {
     }, [])
 
     async function checkAuth() {
+        // navigation.navigate("testApp")
+        // return;
         const email = await AsyncStorage.getItem(storageKeys.storeUserEmail, (err, res) => {
             if(res){
                 navigation.navigate(navString.Homescreen)

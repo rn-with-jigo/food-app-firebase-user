@@ -2,7 +2,8 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { navString } from './constants/navStrings'
-import { ADDRESSSCREEN, CARTSCREEN, CHECKOUTSCEEEN, HOMESCREEN, LOADDERSCREEN, LOGINSCREEN, NEWADDRESSSCREEN, ORDERSTATUSSCREEN, REGISTRATIONSCREEN, SPLASHSCREEN } from './screens/screens'
+import { ADDRESSSCREEN, CARTSCREEN, CHECKOUTSCEEEN, HOMESCREEN, LOADDERSCREEN, LOGINSCREEN, NEWADDRESSSCREEN, ORDERSTATUSSCREEN, PRODUCTDETAILSSCREEN, REGISTRATIONSCREEN, SPLASHSCREEN } from './screens/screens'
+import TestApp from './screens/TestApp'
 
 const AppNavigation = () => {
     const AppNav = createNativeStackNavigator();
@@ -10,6 +11,13 @@ const AppNavigation = () => {
         <NavigationContainer>
             <AppNav.Navigator initialRouteName={navString.Splashscreen}>
                 <AppNav.Screen component={SPLASHSCREEN} name={navString.Splashscreen} options={{ headerShown: false, headerBackButtonMenuEnabled: false, }} />
+                <AppNav.Screen component={TestApp} name={"testApp"} 
+                    options={{
+                        headerTitleStyle: {
+                            color:"#2B3A55"
+                        }
+                    }}
+                />
                 <AppNav.Screen component={LOGINSCREEN} name={navString.Login} options={{ headerShown: false, headerBackButtonMenuEnabled: false, }} />
                 <AppNav.Screen component={REGISTRATIONSCREEN} name={navString.Registration} options={{ headerShown: false, headerBackButtonMenuEnabled: false, }} />
                 <AppNav.Screen component={LOADDERSCREEN} name={navString.Loadder} options={{
@@ -22,7 +30,8 @@ const AppNavigation = () => {
                     // headerBackButtonMenuEnabled: false,
                 }} />
                 <AppNav.Screen component={CARTSCREEN} name={navString.Cart} options={{
-                    title: "Cart"
+                    title: "Cart",
+                    
                 }} />
                 <AppNav.Screen component={CHECKOUTSCEEEN} name={navString.Checkout} options={{
                     title: "Checkout"
@@ -38,6 +47,9 @@ const AppNavigation = () => {
                     headerBackVisible: false,
                     headerShown: false,
                     headerBackButtonMenuEnabled: false,
+                }} />
+                <AppNav.Screen component={PRODUCTDETAILSSCREEN} name={navString.ProductDetailsScreen} options={{
+                    title: "Product Details"
                 }} />
             </AppNav.Navigator>
         </NavigationContainer>

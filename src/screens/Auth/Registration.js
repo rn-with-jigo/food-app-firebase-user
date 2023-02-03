@@ -37,6 +37,7 @@ const Registration = ({navigation}) => {
                 uid: useruid,
                 cart: [],
                 address: [],
+                favorite: [],
                 selectedAddIndex: null, 
             })
             // this for the use id from db of firebase
